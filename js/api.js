@@ -92,11 +92,51 @@ function createFooter() {
     return main;
   }
 
-//Function to create cards dynamically and make Api call by DOM elements and fetch with async and await
+// Api call using fetch with async and await
   async function getNews(category){
+    try{
+    //Api Call
+      var data = await fetch('https://api.nytimes.com/svc/topstories/v2/'+category+'.json?api-key='+api_key);
+      if(data.status == 200 && data.statusText == 'OK')
+      {
+        var jsonData = await data.json();
+        createCard(category, jsonData)
+      } else{
+        generateErrorSection(category, data);
+      }
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+  // handling and showing error message on UI
+  async function generateErrorSection(category, data){
     document.getElementById('newYorkTimes').innerHTML = '';
     var container = document.getElementById('newYorkTimes');
-    var tabActive = sessionStorage.getItem("activeTab");
+    var tabActive = await sessionStorage.getItem("activeTab");
+
+    document.getElementById(tabActive).setAttribute("class", "nav-item text-uppercase");
+    document.getElementById(category).setAttribute("class", "nav-item text-uppercase active");
+
+    var h1 = document.createElement('h1');
+    h1.setAttribute('class','mt-5');
+    h1.innerText = 'Something Went Wrong...';
+
+    var h2 = document.createElement('h2');
+    h2.setAttribute('class','mt-3');
+    h2.innerText = 'Please try again later. We are receiving "'+data.status+': '+data.statusText+'"';
+
+
+    container.append(h1, h2);
+    await sessionStorage.setItem("activeTab", category);
+  }
+
+  //creating Card with data received from APi Call
+  async function createCard(category, jsonData){
+    document.getElementById('newYorkTimes').innerHTML = '';
+    var container = document.getElementById('newYorkTimes');
+    var tabActive = await sessionStorage.getItem("activeTab");
 
     document.getElementById(tabActive).setAttribute("class", "nav-item text-uppercase");
     document.getElementById(category).setAttribute("class", "nav-item text-uppercase active");
@@ -107,10 +147,6 @@ function createFooter() {
 
     var deck = document.createElement('div');
     deck.setAttribute('class', 'card-deck mt-4');
-
-    //Api Call
-    var data = await fetch('https://api.nytimes.com/svc/topstories/v2/'+category+'.json?api-key='+api_key);
-    var jsonData = await data.json();
 
     var mainRow = document.createElement('div');
     mainRow.setAttribute('class', 'row');
@@ -186,8 +222,8 @@ function createFooter() {
         mainRow.append(maincol);
     }
     container.append(h1, mainRow);
-    sessionStorage.setItem("activeTab", category);
-  }
+    await sessionStorage.setItem("activeTab", category);
+}
 
   // Function to format Received timestamp into required format using Date objects
 function formatDate(dateString){
