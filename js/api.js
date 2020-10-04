@@ -71,7 +71,7 @@ function createFooter() {
     var footDivSpan = document.createElement("span");
     footDivSpan.setAttribute("class", "text-muted");
     footDivSpan.innerHTML =
-      'Designed with <i class="fas fa-heart" style="color:red"></i> by Prashant Gupta(<a href="https://github.com/codyprashant/new-york-times-api" style="color: crimson;">@codyPrashant</a>)';
+      'Designed with <i class="fas fa-heart" style="color:red"></i> by Prashant Gupta(<a href="https://github.com/codyprashant/new-york-times-api" target="_blank" style="color: crimson;">@codyPrashant</a>)';
   
     footDiv.appendChild(footDivSpan);
     foot.appendChild(footDiv);
