@@ -4,6 +4,8 @@ var navHeadings = ['home', 'world','politics','magazine', 'technology','science'
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 //New York Times Developers API
 var api_key = 'CZbpvgNGWNNclm7AoGqR4evpNQi3wDyB';
+//setting activeTab session value default as home
+sessionStorage.setItem("activeTab", 'home');
 
 //Creating Header with Navbar by DOM elements
 function createHeader(){
@@ -41,13 +43,13 @@ for(let i = 0; i< navHeadings.length; i++){
   
   var li = document.createElement("li");
   li.setAttribute("class", "nav-item text-uppercase");
+  li.id = navHeadings[i];
 
   var liA = document.createElement("a");
   liA.setAttribute("class", "nav-link");
   liA.setAttribute("onclick", "getNews('"+navHeadings[i]+"')");
   liA.href = "#";
   liA.innerText = navHeadings[i];
-  liA.id = navHeadings[i];
   li.appendChild(liA);
   navDivUl.appendChild(li);
 }
@@ -94,6 +96,10 @@ function createFooter() {
   async function getNews(category){
     document.getElementById('newYorkTimes').innerHTML = '';
     var container = document.getElementById('newYorkTimes');
+    var tabActive = sessionStorage.getItem("activeTab");
+
+    document.getElementById(tabActive).setAttribute("class", "nav-item text-uppercase");
+    document.getElementById(category).setAttribute("class", "nav-item text-uppercase active");
 
     var h1 = document.createElement('h1');
     h1.setAttribute('class','mt-5 text-uppercase');
@@ -180,6 +186,7 @@ function createFooter() {
         mainRow.append(maincol);
     }
     container.append(h1, mainRow);
+    sessionStorage.setItem("activeTab", category);
   }
 
   // Function to format Received timestamp into required format using Date objects
